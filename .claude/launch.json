@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "landing",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8123",
+        "--directory",
+        "C:\\Users\\User\\Downloads\\logillc\\project"
+      ],
+      "port": 8123,
+      "url": "http://localhost:8123"
+    }
+  ]
+}

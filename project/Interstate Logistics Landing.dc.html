@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@100..1000&display=swap" rel="stylesheet" />
+<style>
+  /* Mastercard-inspired system: warm cream canvas, one typeface, pill + stadium radii */
+  body { margin: 0; background: #F3F0EE; -webkit-font-smoothing: antialiased; }
+  a { color: #141413; text-decoration: none; }
+  ::selection { background: #141413; color: #F3F0EE; }
+  input, textarea, select, button { font-family: inherit; }
+  input::placeholder, textarea::placeholder { color: #D1CDC7; }
+
+  /* Constellation: circular portraits sit off-grid, never on a straight row */
+  .mc-constellation > *:nth-child(2) { margin-top: 72px }
+  .mc-constellation > *:nth-child(3) { margin-top: 136px }
+  .mc-constellation > *:nth-child(5) { margin-top: 72px }
+  .mc-constellation > *:nth-child(6) { margin-top: 136px }
+  @media (max-width: 1023px) { .mc-constellation > * { margin-top: 0 !important } }
+
+  /* Hero photo: white studio ground multiplies into the cream canvas, so the photo has no visible edge.
+     The crop only trims the empty white headroom above the tank (source content starts at y=454 of 1792). */
+  .mc-hero-img { background: transparent }
+  /* The negative pull scales with width; on phones the photo is too small to hide text in its headroom */
+  @media (max-width: 767px) { .mc-hero-media { margin-top: 12px !important } }
+
+  /* Satellite micro-CTA reacts to its whole portrait card */
+  .mc-portrait:hover .mc-satellite { background: #141413; color: #F3F0EE; }
+  .mc-portrait:hover .mc-orbit-ring { border-color: #F37338; }
+</style>
+</helmet>
+<div style="font-family: Sofia Sans, SofiaSans, Arial, sans-serif; color: #141413; background: #F3F0EE; overflow-x: hidden">
+
+  <header style="position: sticky; top: 0; z-index: 50; padding: 24px clamp(16px, 3vw, 48px) 0">
+    <div style="max-width: 1280px; margin: 0 auto; background: #FFFFFF; border-radius: 999px; box-shadow: rgba(0,0,0,0.04) 0px 4px 24px 0px; padding: 12px 12px 12px 24px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap">
+      <div style="display: flex; align-items: center; gap: 14px; margin-right: auto">
+        <img src="./uploads/interstate-logistics-logo.png" alt="Interstate Logistics logo" style="width: 48px; height: 48px; object-fit: contain; flex: none" />
+        <div style="line-height: 1.1">
+          <div style="font-weight: 500; font-size: 18px; letter-spacing: -0.36px">Interstate Logistics</div>
+          <div style="font-size: 12px; letter-spacing: 0.48px; color: #696969; font-weight: 700; text-transform: uppercase">Chemical logistics. Connected.</div>
+        </div>
+      </div>
+      <nav style="display: flex; gap: clamp(20px, 3vw, 48px); font-size: 16px; font-weight: 500; letter-spacing: -0.48px">
+        <a href="#about" style="color: #141413" style-hover="color: #696969">Company</a>
+        <a href="#chemical" style="color: #141413" style-hover="color: #696969">Chemical</a>
+        <a href="#why" style="color: #141413" style-hover="color: #696969">Why us</a>
+        <a href="#freight" style="color: #141413" style-hover="color: #696969">Freight</a>
+        <a href="#contact" style="color: #141413" style-hover="color: #696969">Contact</a>
+      </nav>
+      <a href="#contact" style="background: #CF4500; color: #FFFFFF; border: 1.5px solid #CF4500; border-radius: 20px; padding: 12px 24px; font-weight: 500; font-size: 16px; letter-spacing: -0.32px" style-hover="background: #9A3A0A; border-color: #9A3A0A">Contact us</a>
+    </div>
+  </header>
+
+  <section style="padding: clamp(56px, 6.5vw, 104px) clamp(16px, 3vw, 48px) 0">
+    <div style="max-width: 1280px; margin: 0 auto; text-align: center">
+      <div style="position: relative; z-index: 1">
+        <h1 style="font-weight: 500; font-size: clamp(34px, 5vw, 64px); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 14px; color: #CF4500; text-wrap: balance">Interstate Logistics LLC</h1>
+        <div style="font-weight: 450; font-size: clamp(22px, 3.2vw, 40px); line-height: 1.1; letter-spacing: -0.02em; color: #141413; text-wrap: balance">Your bridge in chemical logistics</div>
+      </div>
+      <div class="mc-hero-media" style="position: relative; margin-top: -4.5%">
+        <img class="mc-hero-img" src="./uploads/iso.jpeg" alt="ISO tank container for bulk chemical transport" style="display: block; width: 100%; aspect-ratio: 2400 / 1542; object-fit: cover; object-position: center bottom; mix-blend-mode: multiply" />
+        <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, #F3F0EE 0%, rgba(243,240,238,0) 4%, rgba(243,240,238,0) 96%, #F3F0EE 100%), linear-gradient(to bottom, #F3F0EE 0%, rgba(243,240,238,0) 10%, rgba(243,240,238,0) 90%, #F3F0EE 100%)"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 1280px; margin: 0 auto; padding: clamp(40px, 5vw, 64px) clamp(24px, 4vw, 48px) 0">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
+      <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Any mode · Any market · A stronger supply chain</span>
+    </div>
+    <p style="font-size: 18px; font-weight: 450; line-height: 1.45; color: #262627; max-width: 620px; margin: 0; text-wrap: pretty">Complex products. Multiple modes. One partner. Interstate Logistics LLC moves hazardous and non-hazardous freight across the United States, Canada and Mexico.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px 48px; margin-top: clamp(36px, 4vw, 52px)">
+      <sc-for list="{{ heroPoints }}" as="pt" hint-placeholder-count="3">
+        <div style="border-top: 1px solid #D1CDC7; padding-top: 20px">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #CF4500; flex: none"></span>
+            <div style="font-weight: 500; font-size: 20px; letter-spacing: -0.4px">{{ pt.title }}</div>
+          </div>
+          <div style="font-size: 16px; font-weight: 450; line-height: 1.4; color: #696969; margin-top: 8px">{{ pt.body }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width: 1280px; margin: 0 auto; padding: 40px clamp(24px, 4vw, 48px) 0">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px">
+      <span style="background: #FFFFFF; border-radius: 999px; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; color: #141413">Hazmat certified</span>
+      <span style="background: #FFFFFF; border-radius: 999px; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; color: #141413">24/7 dispatch</span>
+      <span style="background: #FFFFFF; border-radius: 999px; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; color: #141413">USA | Canada | Mexico</span>
+      <span style="background: #FFFFFF; border-radius: 999px; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; color: #141413">Customs support</span>
+      <span style="background: #FFFFFF; border-radius: 999px; padding: 10px 22px; font-size: 13px; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; color: #141413">Dedicated carrier network</span>
+    </div>
+  </section>
+
+  <section id="about" style="position: relative; overflow: hidden">
+    <div style="position: absolute; left: 0; top: 48px; font-size: clamp(72px, 12vw, 148px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #E8E2DA; pointer-events: none; white-space: nowrap">Our company</div>
+    <div style="position: relative; max-width: 1280px; margin: 0 auto; padding: clamp(64px, 9vw, 128px) clamp(24px, 4vw, 48px); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 64px">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
+          <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Our company</span>
+        </div>
+        <h2 style="font-weight: 500; font-size: clamp(32px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0">More than logistics. A cleaner, safer tomorrow.</h2>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 20px; font-size: 16px; font-weight: 450; line-height: 1.5; color: #262627">
+        <p style="margin: 0">Interstate Logistics LLC is a chemical logistics specialist operating across North America. We plan, execute and monitor the movement of bulk liquids, packaged chemicals and regulated materials by truck, rail, intermodal and ocean.</p>
+        <p style="margin: 0">Chemical freight leaves no room for improvisation. Every load is built around the product: the right equipment, the right documentation, a carrier qualified to handle it, and a team that stays with the shipment from pickup to delivery.</p>
+        <p style="margin: 0">Alongside our chemical work we handle standard freight of every description, so one partner covers the whole supply chain.</p>
+        <div style="padding-top: 8px">
+          <span style="display: inline-block; background: #FFFFFF; border-radius: 999px; padding: 10px 24px; font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase; color: #141413">People · Solutions · Results</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chemical" style="padding: 0 clamp(16px, 3vw, 48px)">
+    <div style="max-width: 1280px; margin: 0 auto; background: #FCFBFA; border-radius: 40px; position: relative; overflow: hidden; padding: clamp(56px, 8vw, 112px) clamp(24px, 5vw, 72px)">
+      <div style="position: absolute; width: 1400px; height: 1400px; border-radius: 50%; border: 1.2px solid transparent; border-top-color: #F37338; opacity: 0.35; transform: rotate(8deg); left: -220px; top: 280px; pointer-events: none"></div>
+      <div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap; margin-bottom: 72px">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
+            <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Chemical logistics</span>
+          </div>
+          <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0">What we move, and how</h2>
+        </div>
+        <p style="max-width: 380px; margin: 0; color: #696969; font-size: 16px; font-weight: 450; line-height: 1.4">Specialized when it is complex. Connected for everything else.</p>
+      </div>
+      <div class="mc-constellation" style="position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 72px 48px">
+        <sc-for list="{{ chemicalServices }}" as="s" hint-placeholder-count="6">
+          <div class="mc-portrait" style="display: flex; flex-direction: column; align-items: center; gap: 28px">
+            <div style="position: relative; width: clamp(200px, 20vw, 260px); height: clamp(200px, 20vw, 260px)">
+              <div class="mc-orbit-ring" style="position: absolute; inset: 0; border-radius: 50%; border: 1px solid #E8E2DA; background: radial-gradient(circle at 32% 28%, #FBEFE5, #EFE7DE 62%, #E8E2DA); display: flex; align-items: center; justify-content: center">
+                <span style="font-size: clamp(48px, 5vw, 64px); font-weight: 500; letter-spacing: -0.02em; color: #141413">{{ s.num }}</span>
+              </div>
+              <div class="mc-satellite" style="position: absolute; right: -10px; bottom: 10px; width: 56px; height: 56px; border-radius: 50%; background: #FFFFFF; color: #141413; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px">→</div>
+            </div>
+            <div style="align-self: stretch; max-width: 320px; margin: 0 auto">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: #CF4500; flex: none"></span>
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.48px; text-transform: uppercase; color: #696969">{{ s.tags }}</span>
+              </div>
+              <h3 style="font-weight: 500; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 10px">{{ s.title }}</h3>
+              <p style="margin: 0; font-size: 16px; font-weight: 450; line-height: 1.4; color: #262627">{{ s.body }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" style="padding: clamp(64px, 9vw, 128px) clamp(16px, 3vw, 48px) 0">
+    <div style="max-width: 1280px; margin: 0 auto; background: #141413; color: #F3F0EE; border-radius: 40px; padding: clamp(56px, 8vw, 112px) clamp(24px, 5vw, 72px)">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #F37338"></span>
+        <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Why Interstate Logistics</span>
+      </div>
+      <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 72px; max-width: 700px">Your goals. Our network. Real results.</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px 56px">
+        <sc-for list="{{ advantages }}" as="a" hint-placeholder-count="6">
+          <div style="border-top: 1px solid rgba(243,240,238,0.2); padding-top: 24px">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #F37338; flex: none"></span>
+              <h3 style="font-weight: 500; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; margin: 0">{{ a.title }}</h3>
+            </div>
+            <p style="margin: 0; font-size: 16px; font-weight: 450; line-height: 1.45; color: #A39C94">{{ a.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="freight" style="max-width: 1280px; margin: 0 auto; padding: clamp(64px, 9vw, 128px) clamp(24px, 4vw, 48px)">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 64px; align-items: start">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
+          <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Beyond chemicals</span>
+        </div>
+        <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 22px">A full-service logistics partner</h2>
+        <p style="margin: 0 0 32px; font-size: 16px; font-weight: 450; line-height: 1.5; color: #262627; max-width: 460px">The same team also handles general freight: full truckload, LTL, intermodal and cross-border. One point of contact for every shipment you tender.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+          <sc-for list="{{ modes }}" as="m" hint-placeholder-count="4">
+            <div style="background: #FFFFFF; border-radius: 24px; padding: 24px 24px 26px">
+              <div style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">{{ m.title }}</div>
+              <div style="font-size: 14px; font-weight: 450; color: #696969; margin-top: 8px; line-height: 1.4">{{ m.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 22px">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
+          <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Commodities we haul</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px">
+          <sc-for list="{{ commodities }}" as="c" hint-placeholder-count="14">
+            <div style="background: #FFFFFF; border: 1px solid #E8E2DA; border-radius: 999px; padding: 10px 20px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; color: #141413" style-hover="background: #141413; color: #F3F0EE; border-color: #141413">{{ c }}</div>
+          </sc-for>
+        </div>
+        <p style="margin: 28px 0 0; font-size: 16px; font-weight: 450; line-height: 1.45; color: #696969">Not on the list? Send the specs and we will tell you honestly whether we are the right carrier partner for it.</p>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ showTestimonials }}" hint-placeholder-val="{{ true }}">
+    <section style="padding: 0 clamp(16px, 3vw, 48px)">
+      <div style="max-width: 1280px; margin: 0 auto; background: #FCFBFA; border-radius: 40px; padding: clamp(56px, 8vw, 112px) clamp(24px, 5vw, 72px)">
+        <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 56px">
+          <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0">What our clients say</h2>
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.48px; text-transform: uppercase; color: #696969; background: #F3F0EE; border: 1px dashed #D1CDC7; border-radius: 999px; padding: 8px 18px">Placeholder quotes — replace with real client wording</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 32px">
+          <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
+            <figure style="background: #FFFFFF; border-radius: 40px; padding: 40px 36px 36px; margin: 0; display: flex; flex-direction: column; gap: 20px; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px">
+              <div style="font-size: 56px; line-height: 0.5; font-weight: 500; color: #E8E2DA">“</div>
+              <blockquote style="margin: 0; font-size: 16px; font-weight: 450; line-height: 1.5; color: #262627">{{ t.quote }}</blockquote>
+              <figcaption style="margin-top: auto; padding-top: 16px; border-top: 1px solid #E8E2DA">
+                <div style="font-weight: 500; font-size: 16px; letter-spacing: -0.32px">{{ t.name }}</div>
+                <div style="font-size: 14px; font-weight: 450; color: #696969">{{ t.role }}</div>
+              </figcaption>
+            </figure>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <section id="contact" style="padding: clamp(64px, 9vw, 128px) clamp(16px, 3vw, 48px)">
+    <div style="max-width: 1280px; margin: 0 auto; background: #141413; color: #F3F0EE; border-radius: 40px; padding: clamp(56px, 8vw, 112px) clamp(24px, 5vw, 72px); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 64px">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #F37338"></span>
+          <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Contact us</span>
+        </div>
+        <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 24px">Tell us what you need to move</h2>
+        <p style="margin: 0 0 44px; font-size: 16px; font-weight: 450; line-height: 1.5; color: #A39C94; max-width: 420px">Send the product, the lane and the timing. A specialist replies with equipment options and pricing.</p>
+        <div style="display: flex; flex-direction: column; gap: 28px">
+          <div style="border-top: 1px solid rgba(243,240,238,0.2); padding-top: 20px">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #F37338"></span>
+              <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase; color: #A39C94">Phone · 24/7 dispatch</span>
+            </div>
+            <a href="tel:+14808089880" style="font-weight: 500; font-size: 24px; letter-spacing: -0.02em; color: #F3F0EE" style-hover="color: #D1CDC7">+1 (480) 808-9880</a>
+          </div>
+          <div style="border-top: 1px solid rgba(243,240,238,0.2); padding-top: 20px">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #F37338"></span>
+              <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase; color: #A39C94">Email</span>
+            </div>
+            <a href="mailto:skarakeian@armstrongtransport.com" style="font-weight: 500; font-size: 18px; letter-spacing: -0.36px; color: #F3F0EE; word-break: break-all" style-hover="color: #D1CDC7">skarakeian@armstrongtransport.com</a>
+          </div>
+          <div style="border-top: 1px solid rgba(243,240,238,0.2); padding-top: 20px">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #F37338"></span>
+              <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase; color: #A39C94">Office</span>
+            </div>
+            <div style="font-size: 18px; font-weight: 450; line-height: 1.4; color: #F3F0EE">194 Daniel Cutoff<br />Woodland, GA</div>
+          </div>
+        </div>
+      </div>
+
+      <form onSubmit="{{ onSubmit }}" style="background: #FFFFFF; color: #141413; border-radius: 40px; padding: 40px 36px 36px; display: flex; flex-direction: column; gap: 20px; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px">
+        <div style="font-weight: 500; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em">Request a callback</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px">
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Name
+            <input type="text" name="name" required="" placeholder="Jane Doe" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 999px; padding: 12px 24px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF" style-focus="border-color: #141413" />
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Company
+            <input type="text" name="company" placeholder="Company name" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 999px; padding: 12px 24px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF" style-focus="border-color: #141413" />
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Email
+            <input type="email" name="email" required="" placeholder="you@company.com" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 999px; padding: 12px 24px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF" style-focus="border-color: #141413" />
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Phone
+            <input type="tel" name="phone" placeholder="+1" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 999px; padding: 12px 24px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF" style-focus="border-color: #141413" />
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Freight type
+            <select name="freight" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 999px; padding: 12px 20px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF" style-focus="border-color: #141413">
+              <option>Bulk chemical / ISO tank</option>
+              <option>Packaged hazmat</option>
+              <option>Rail / transloading</option>
+              <option>Import / export drayage</option>
+              <option>Dry van / flatbed</option>
+              <option>LTL / partial</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Origin / destination
+            <input type="text" name="lane" placeholder="Houston, TX → Toronto, ON" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 999px; padding: 12px 24px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF" style-focus="border-color: #141413" />
+          </label>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: 0.48px; font-weight: 700; text-transform: uppercase; color: #696969">Message
+          <textarea name="message" rows="3" placeholder="Product, packaging, volume, timing" style="border: 1px solid rgba(20,20,19,0.5); border-radius: 24px; padding: 14px 24px; font-size: 16px; font-weight: 450; letter-spacing: -0.32px; text-transform: none; color: #141413; outline: none; background: #FFFFFF; resize: vertical" style-focus="border-color: #141413"></textarea>
+        </label>
+        <button type="submit" style="align-self: flex-start; margin-top: 8px; background: #141413; color: #F3F0EE; border: 1.5px solid #141413; border-radius: 20px; padding: 14px 32px; font-weight: 500; font-size: 16px; letter-spacing: -0.32px; cursor: pointer" style-hover="background: #FFFFFF; color: #141413">{{ submitLabel }}</button>
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="align-self: flex-start; background: #141413; color: #F3F0EE; border-radius: 999px; padding: 10px 22px; font-size: 14px; font-weight: 500; letter-spacing: -0.28px">Thank you — we will get back to you shortly.</div>
+        </sc-if>
+        <div style="font-size: 14px; font-weight: 450; color: #696969; line-height: 1.4">Prefer email? Write to skarakeian@armstrongtransport.com.</div>
+      </form>
+    </div>
+  </section>
+
+  <footer style="background: #141413; color: #FFFFFF">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 100px) clamp(24px, 4vw, 48px) clamp(64px, 9vw, 148px); display: flex; flex-wrap: wrap; gap: 24px 48px; align-items: center">
+      <div style="font-weight: 500; font-size: 24px; letter-spacing: -0.02em; color: #FFFFFF">Interstate Logistics LLC</div>
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #F37338"></span>
+        <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase; color: #A39C94">North America · A stronger supply chain together</span>
+      </div>
+      <div style="margin-left: auto; font-size: 14px; font-weight: 450; color: #A39C94">© 2026 Interstate Logistics LLC</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showTestimonials&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;submitLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Send request&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  state = { sent: false };
+
+  renderVals() {
+    return {
+      showTestimonials: this.props.showTestimonials ?? true,
+      submitLabel: this.props.submitLabel ?? "Send request",
+      sent: this.state.sent,
+      onSubmit: (e) => { e.preventDefault(); this.setState({ sent: true }); },
+      heroPoints: [
+        { title: "Hazmat expertise", body: "Regulated product handled to the letter, every lane." },
+        { title: "End-to-end execution", body: "Booking, documentation, tracking and delivery in one place." },
+        { title: "Any mode, any market", body: "Truck, rail, intermodal and ocean across North America." }
+      ],
+      chemicalServices: [
+        { num: "01", title: "Bulk truck", tags: "FTL | LTL | INTERMODAL | SPECIALIZED", body: "Tank trailers and specialized equipment for bulk liquids, with carriers qualified for the product you ship." },
+        { num: "02", title: "ISO tanks", tags: "HEATING | SAMPLING | CLEANING | STORAGE", body: "Tank supply and full in-transit services, including depot storage between moves." },
+        { num: "03", title: "Rail", tags: "CAR SUPPLY | LEASING | TRANSLOADING", body: "Rail car sourcing and leasing, plus transloading to truck for the final leg." },
+        { num: "04", title: "Import / export", tags: "PORT DRAYAGE", body: "Ocean freight coordination and port drayage in and out of North American terminals." },
+        { num: "05", title: "Transloading & storage", tags: "MODE TO MODE", body: "Product transferred between rail, tank and truck under supervision, with short-term storage when the schedule calls for it." },
+        { num: "06", title: "Regulatory compliance", tags: "DOCUMENTATION | PERMITS", body: "Shipping papers, placarding and permits prepared and checked before the load moves." }
+      ],
+      advantages: [
+        { title: "Chemical is our first language", body: "We are not a general broker that occasionally takes a tank load. Regulated freight is the core of the business, and the team reads an SDS before it quotes." },
+        { title: "Hazmat certified", body: "Certified handling and carrier vetting for hazardous materials, with compliance checked on every booking rather than assumed." },
+        { title: "24/7 dispatch", body: "A live person on the phone at any hour. Detention, reroutes and weather do not wait for business days." },
+        { title: "Cross-border without surprises", body: "USA, Canada and Mexico moves with customs support, so paperwork does not strand your freight at the line." },
+        { title: "A dedicated carrier network", body: "Vetted carriers with the right equipment and the right endorsements, held to the standards your product requires." },
+        { title: "One partner for everything else", body: "Dry van, flatbed, LTL and intermodal run through the same team, so you are not managing three vendors." }
+      ],
+      modes: [
+        { title: "FULL TRUCKLOAD", body: "Flatbed · Dry van · Specialized" },
+        { title: "LTL", body: "From a single pallet to partial truckloads" },
+        { title: "INTERMODAL", body: "Rail · Drayage · Ocean" },
+        { title: "CROSS-BORDER", body: "USA · Canada · Mexico · Customs support" }
+      ],
+      commodities: [
+        "Packaged chemicals", "Plastics and resins", "Lubricants and oils", "Paints and coatings",
+        "Industrial gases equipment", "Fertilizers and agriculture inputs", "Building materials",
+        "Steel and metals", "Machinery and equipment", "Food-grade dry goods", "Paper and packaging",
+        "Consumer goods", "Automotive parts", "Palletized general freight"
+      ],
+      testimonials: [
+        { quote: "Placeholder: a client describes a difficult bulk chemical lane that Interstate covered on short notice.", name: "Client name", role: "Title, Company" },
+        { quote: "Placeholder: a shipper comments on documentation accuracy and hazmat compliance across cross-border moves.", name: "Client name", role: "Title, Company" },
+        { quote: "Placeholder: a logistics manager explains why they consolidated chemical and general freight with one partner.", name: "Client name", role: "Title, Company" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
