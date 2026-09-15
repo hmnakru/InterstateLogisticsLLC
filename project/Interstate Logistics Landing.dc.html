@@ -165,8 +165,7 @@
                 <video class="mc-slide-media mc-slide-video" src="{{ s.video }}" muted="true" loop="true" playsinline="true" preload="none"></video>
                 <div class="mc-slide-scrim"></div>
               </sc-if>
-              <div style="position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: {{ s.contentGap }}; max-width: 76%">
-                <div style="{{ s.pillStyle }}">{{ s.label }}</div>
+              <div style="position: relative; max-width: 76%">
                 <div style="{{ s.titleStyle }}">{{ s.title }}</div>
               </div>
             </div>
@@ -442,16 +441,13 @@ class Component extends DCLogic {
         const on = i === pos;
         return {
           ...s,
-          label: "Stage " + s.num,
           hasMedia: !!s.image,
           mediaAlt: s.mediaAlt || "",
           onSelect: () => this.go(i),
           onHoverIn: (e) => this.playMedia(e),
           onHoverOut: (e) => this.stopMedia(e),
-          contentGap: on ? "14px" : "7px",
           slideStyle: "flex: none; width: " + (on ? "var(--mc-w)" : "var(--mc-ws)") + "; aspect-ratio: 2 / 1; transition: width " + move,
-          cardStyle: "position: relative; overflow: hidden; width: 100%; height: 100%; box-sizing: border-box; padding: 0 8%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px " + (s.image ? "solid rgba(255,255,255,0.32)" : "dashed " + (on ? "#D1CDC7" : "#E2DCD4")) + "; display: flex; align-items: center; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: background 480ms ease, border-color 320ms ease",
-          pillStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "9px 20px" : "5px 12px") + "; font-size: " + (on ? "13px" : "10px") + "; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; white-space: nowrap",
+          cardStyle: "position: relative; overflow: hidden; width: 100%; height: 100%; box-sizing: border-box; padding: 0 10% 7%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px " + (s.image ? "solid rgba(255,255,255,0.32)" : "dashed " + (on ? "#D1CDC7" : "#E2DCD4")) + "; display: flex; align-items: flex-end; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: background 480ms ease, border-color 320ms ease",
           titleStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "clamp(12px, 1.5vw, 20px) clamp(24px, 3vw, 44px)" : "8px 18px") + "; font-weight: 500; font-size: " + (on ? "clamp(20px, 2.5vw, 40px)" : "clamp(11px, 1.4vw, 20px)") + "; line-height: 1.1; letter-spacing: -0.02em; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px"
         };
       }),
