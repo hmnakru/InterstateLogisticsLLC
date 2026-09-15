@@ -43,6 +43,15 @@
   @media (max-width: 900px) { .mc-carousel { --mc-w: min(760px, 76vw); --mc-ws: min(380px, 38vw); --mc-gap: 12px } }
   @media (max-width: 600px) { .mc-carousel { --mc-w: 84vw; --mc-ws: 42vw; --mc-gap: 10px } }
   .mc-slide-card:hover { border-color: #F37338 !important }
+
+  /* A stage card can carry media: a still that sits under the pills, and a muted clip
+     that cross-fades in on hover. The clip is preload="none" and only starts playing
+     when the pointer enters the card, so idle slides cost nothing. */
+  .mc-slide-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block }
+  .mc-slide-video { opacity: 0; transition: opacity 420ms ease }
+  .mc-slide-card:hover .mc-slide-video { opacity: 1 }
+  .mc-slide-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,20,19,0.10) 0%, rgba(20,20,19,0.34) 100%) }
+  @media (prefers-reduced-motion: reduce) { .mc-slide-video { display: none } }
 </style>
 </helmet>
 <div style="font-family: Sofia Sans, SofiaSans, Arial, sans-serif; color: #141413; background: #F3F0EE; overflow-x: hidden">
@@ -150,8 +159,13 @@
       <div style="{{ trackStyle }}">
         <sc-for list="{{ chemicalSlides }}" as="s" hint-placeholder-count="5">
           <div style="{{ s.slideStyle }}">
-            <div class="mc-slide-card" onClick="{{ s.onSelect }}" style="{{ s.cardStyle }}">
-              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: {{ s.contentGap }}; max-width: 76%">
+            <div class="mc-slide-card" onClick="{{ s.onSelect }}" onMouseEnter="{{ s.onHoverIn }}" onMouseLeave="{{ s.onHoverOut }}" style="{{ s.cardStyle }}">
+              <sc-if value="{{ s.hasMedia }}">
+                <img class="mc-slide-media" src="{{ s.image }}" alt="{{ s.mediaAlt }}" />
+                <video class="mc-slide-media mc-slide-video" src="{{ s.video }}" muted="true" loop="true" playsinline="true" preload="none"></video>
+                <div class="mc-slide-scrim"></div>
+              </sc-if>
+              <div style="position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: {{ s.contentGap }}; max-width: 76%">
                 <div style="{{ s.pillStyle }}">{{ s.label }}</div>
                 <div style="{{ s.titleStyle }}">{{ s.title }}</div>
               </div>
@@ -350,7 +364,8 @@ class Component extends DCLogic {
 
   stages = [
     { num: "01", title: "ISO tank solutions", tags: "SUPPLY | LEASING | REPOSITIONING", body: "ISO tank containers sourced, leased and positioned for your lane, with the shell, valves and approvals the product requires." },
-    { num: "02", title: "Railcar movements", tags: "CAR SUPPLY | LEASING | SWITCHING", body: "Rail car sourcing and leasing, with movements between plants, terminals and depots tracked from release to placement." },
+    { num: "02", title: "Railcar movements", tags: "CAR SUPPLY | LEASING | SWITCHING", body: "Rail car sourcing and leasing, with movements between plants, terminals and depots tracked from release to placement.",
+      image: "./uploads/railcar-movements.jpg", video: "./uploads/railcar-movements.mp4", mediaAlt: "Tank cars staged on a rail siding" },
     { num: "03", title: "Heating", tags: "STEAM | ELECTRIC | HOT BOX", body: "Product brought back to pumping temperature by steam, electric blanket or hot box, held to the profile the cargo calls for." },
     { num: "04", title: "Washing", tags: "CLEANING | FOOD GRADE | KOSHER", body: "Tank and container cleaning at approved facilities, with wash certificates on file so the next load starts from a documented clean." },
     { num: "05", title: "Transloading", tags: "MODE TO MODE | STORAGE", body: "Product transferred between rail, tank and truck under supervision, with short-term storage when the schedule calls for it." }
@@ -377,6 +392,23 @@ class Component extends DCLogic {
         requestAnimationFrame(() => this.setState({ snapping: false }));
       });
     }, 700);
+  }
+
+  // Media cards keep their clip at preload="none"; it only loads and plays while the
+  // pointer is on the card, and rewinds on the way out so the next hover starts clean.
+  playMedia(e) {
+    const v = e.currentTarget.querySelector("video");
+    if (!v) return;
+    v.muted = true;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  }
+
+  stopMedia(e) {
+    const v = e.currentTarget.querySelector("video");
+    if (!v) return;
+    v.pause();
+    v.currentTime = 0;
   }
 
   go(pos) { this.setState({ pos, playing: false }); }
@@ -411,10 +443,14 @@ class Component extends DCLogic {
         return {
           ...s,
           label: "Stage " + s.num,
+          hasMedia: !!s.image,
+          mediaAlt: s.mediaAlt || "",
           onSelect: () => this.go(i),
+          onHoverIn: (e) => this.playMedia(e),
+          onHoverOut: (e) => this.stopMedia(e),
           contentGap: on ? "14px" : "7px",
           slideStyle: "flex: none; width: " + (on ? "var(--mc-w)" : "var(--mc-ws)") + "; aspect-ratio: 2 / 1; transition: width " + move,
-          cardStyle: "position: relative; width: 100%; height: 100%; box-sizing: border-box; padding: 0 8%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px dashed " + (on ? "#D1CDC7" : "#E2DCD4") + "; display: flex; align-items: center; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: background 480ms ease, border-color 320ms ease",
+          cardStyle: "position: relative; overflow: hidden; width: 100%; height: 100%; box-sizing: border-box; padding: 0 8%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px " + (s.image ? "solid rgba(255,255,255,0.32)" : "dashed " + (on ? "#D1CDC7" : "#E2DCD4")) + "; display: flex; align-items: center; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: background 480ms ease, border-color 320ms ease",
           pillStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "9px 20px" : "5px 12px") + "; font-size: " + (on ? "13px" : "10px") + "; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; white-space: nowrap",
           titleStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "clamp(12px, 1.5vw, 20px) clamp(24px, 3vw, 44px)" : "8px 18px") + "; font-weight: 500; font-size: " + (on ? "clamp(20px, 2.5vw, 40px)" : "clamp(11px, 1.4vw, 20px)") + "; line-height: 1.1; letter-spacing: -0.02em; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px"
         };
