@@ -376,25 +376,35 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      if (this.state.playing) this.setState({ pos: this.state.pos + 1 });
+      if (this.state.playing && !this.state.snapping) this.move(this.state.pos + 1, false);
     }, 5200);
   }
 
-  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.snapTimer); }
+  componentWillUnmount() { clearInterval(this.timer); cancelAnimationFrame(this.raf1); cancelAnimationFrame(this.raf2); }
 
-  // The track renders three copies of the stages, so a neighbour always bleeds off
-  // both screen edges. Once the active position leaves the middle copy, jump it back
-  // by one period after the slide finishes — the layout repeats, so the jump is invisible.
-  componentDidUpdate() {
+  // The track renders three copies of the stages, so a neighbour always bleeds off both
+  // screen edges. A move that would leave the middle copy is rebased first: the position
+  // jumps a whole period, with transitions off, onto the identical spot in the copy the
+  // target lives in, and only then animates. Rebasing before the move instead of after it
+  // keeps the position inside the middle copy at all times — at either end of the track a
+  // slide has no neighbour to show, and that missing neighbour is what made the wrap visible.
+  move(target, stopAutoplay) {
     const n = this.stages.length;
-    const p = this.state.pos;
-    if (this.state.snapping || (p >= n && p < 2 * n)) return;
-    clearTimeout(this.snapTimer);
-    this.snapTimer = setTimeout(() => {
-      this.setState({ pos: n + ((p % n) + n) % n, snapping: true }, () => {
-        requestAnimationFrame(() => this.setState({ snapping: false }));
+    const period = Math.floor(target / n) - 1;
+    const base = stopAutoplay ? { playing: false } : {};
+    if (period === 0) { this.setState({ ...base, pos: target }); return; }
+
+    const shift = -period * n;
+    this.setState({ ...base, pos: this.state.pos + shift, snapping: true }, () => {
+      // Two frames, not one. An rAF callback runs before the paint of the frame its work
+      // was queued in, so restoring the transition in a single rAF puts the rebase and the
+      // move in the same paint and the browser animates the rebase — the carousel visibly
+      // races backwards. The first frame paints the rebase with transitions off; the
+      // second turns them back on and starts the real move.
+      this.raf1 = requestAnimationFrame(() => {
+        this.raf2 = requestAnimationFrame(() => this.setState({ pos: target + shift, snapping: false }));
       });
-    }, 700);
+    });
   }
 
   // Media cards keep their clip at preload="none"; it only loads and plays while the
@@ -414,14 +424,15 @@ class Component extends DCLogic {
     v.currentTime = 0;
   }
 
-  go(pos) { this.setState({ pos, playing: false }); }
+  go(pos) { this.move(pos, true); }
 
   renderVals() {
     const n = this.stages.length;
     const pos = this.state.pos;
     const active = ((pos % n) + n) % n;
     const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
-    const move = this.state.snapping ? "none" : "620ms " + ease;
+    const moveTrack = this.state.snapping ? "none" : "transform 620ms " + ease;
+    const moveSlide = this.state.snapping ? "none" : "width 620ms " + ease;
     const current = this.stages[active];
 
     return {
@@ -438,7 +449,7 @@ class Component extends DCLogic {
       activeTags: current.tags,
       activeBody: current.body,
 
-      trackStyle: "display: flex; align-items: center; gap: var(--mc-gap); width: max-content; margin-left: 50%; transform: translateX(calc(-1 * (" + pos + " * (var(--mc-ws) + var(--mc-gap)) + var(--mc-w) / 2))); transition: transform " + move,
+      trackStyle: "display: flex; align-items: center; gap: var(--mc-gap); width: max-content; margin-left: 50%; transform: translateX(calc(-1 * (" + pos + " * (var(--mc-ws) + var(--mc-gap)) + var(--mc-w) / 2))); transition: " + moveTrack,
 
       chemicalSlides: Array.from({ length: n * 3 }, (_, i) => {
         const s = this.stages[i % n];
@@ -450,8 +461,8 @@ class Component extends DCLogic {
           onSelect: () => this.go(i),
           onHoverIn: (e) => this.playMedia(e),
           onHoverOut: (e) => this.stopMedia(e),
-          slideStyle: "flex: none; width: " + (on ? "var(--mc-w)" : "var(--mc-ws)") + "; aspect-ratio: 2 / 1; transition: width " + move,
-          cardStyle: "position: relative; overflow: hidden; width: 100%; height: 100%; box-sizing: border-box; padding: 0 10% 7%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px " + (s.image ? "solid rgba(255,255,255,0.32)" : "dashed " + (on ? "#D1CDC7" : "#E2DCD4")) + "; display: flex; align-items: flex-end; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: background 480ms ease, border-color 320ms ease",
+          slideStyle: "flex: none; width: " + (on ? "var(--mc-w)" : "var(--mc-ws)") + "; aspect-ratio: 2 / 1; transition: " + moveSlide,
+          cardStyle: "position: relative; overflow: hidden; width: 100%; height: 100%; box-sizing: border-box; padding: 0 10% 7%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px " + (s.image ? "solid rgba(255,255,255,0.32)" : "dashed " + (on ? "#D1CDC7" : "#E2DCD4")) + "; display: flex; align-items: flex-end; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: " + (this.state.snapping ? "none" : "background 480ms ease, border-color 320ms ease"),
           titleStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "clamp(12px, 1.5vw, 20px) clamp(24px, 3vw, 44px)" : "8px 18px") + "; font-weight: 500; font-size: " + (on ? "clamp(20px, 2.5vw, 40px)" : "clamp(11px, 1.4vw, 20px)") + "; line-height: 1.1; letter-spacing: -0.02em; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px"
         };
       }),
