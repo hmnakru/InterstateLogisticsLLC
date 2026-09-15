@@ -35,6 +35,14 @@
   /* Satellite micro-CTA reacts to its whole portrait card */
   .mc-portrait:hover .mc-satellite { background: #141413; color: #F3F0EE; }
   .mc-portrait:hover .mc-orbit-ring { border-color: #F37338; }
+
+  /* Stage carousel: one large card centred, neighbours bleeding off both screen edges.
+     Widths live here (not inline) so the track shift and the slide widths stay in sync
+     across breakpoints — the logic only supplies the active index. */
+  .mc-carousel { --mc-w: min(1180px, 66vw); --mc-ws: min(590px, 33vw); --mc-gap: clamp(12px, 1.6vw, 24px) }
+  @media (max-width: 900px) { .mc-carousel { --mc-w: min(760px, 76vw); --mc-ws: min(380px, 38vw); --mc-gap: 12px } }
+  @media (max-width: 600px) { .mc-carousel { --mc-w: 84vw; --mc-ws: 42vw; --mc-gap: 10px } }
+  .mc-slide-card:hover { border-color: #F37338 !important }
 </style>
 </helmet>
 <div style="font-family: Sofia Sans, SofiaSans, Arial, sans-serif; color: #141413; background: #F3F0EE; overflow-x: hidden">
@@ -122,39 +130,52 @@
     </div>
   </section>
 
-  <section id="chemical" style="padding: 0 clamp(16px, 3vw, 48px)">
-    <div style="max-width: 1280px; margin: 0 auto; background: #FCFBFA; border-radius: 40px; position: relative; overflow: hidden; padding: clamp(56px, 8vw, 112px) clamp(24px, 5vw, 72px)">
-      <div style="position: absolute; width: 1400px; height: 1400px; border-radius: 50%; border: 1.2px solid transparent; border-top-color: #F37338; opacity: 0.35; transform: rotate(8deg); left: -220px; top: 280px; pointer-events: none"></div>
-      <div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap; margin-bottom: 72px">
-        <div>
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
-            <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
-            <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Chemical logistics</span>
-          </div>
-          <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0">What we move, and how</h2>
+  <section id="chemical" class="mc-carousel" style="padding: clamp(56px, 8vw, 112px) 0 clamp(48px, 6vw, 88px); overflow: hidden">
+    <div style="max-width: 1280px; margin: 0 auto clamp(36px, 4.5vw, 64px); padding: 0 clamp(24px, 4vw, 48px); display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
+          <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Chemical logistics</span>
         </div>
-        <p style="max-width: 380px; margin: 0; color: #696969; font-size: 16px; font-weight: 450; line-height: 1.4">Specialized when it is complex. Connected for everything else.</p>
+        <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 14px">What we move, and how</h2>
+        <p style="max-width: 420px; margin: 0; color: #696969; font-size: 16px; font-weight: 450; line-height: 1.4">Specialized when it is complex. Connected for everything else.</p>
       </div>
-      <div class="mc-constellation" style="position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 72px 48px">
-        <sc-for list="{{ chemicalServices }}" as="s" hint-placeholder-count="6">
-          <div class="mc-portrait" style="display: flex; flex-direction: column; align-items: center; gap: 28px">
-            <div style="position: relative; width: clamp(200px, 20vw, 260px); height: clamp(200px, 20vw, 260px)">
-              <div class="mc-orbit-ring" style="position: absolute; inset: 0; border-radius: 50%; border: 1px solid #E8E2DA; background: radial-gradient(circle at 32% 28%, #FBEFE5, #EFE7DE 62%, #E8E2DA); display: flex; align-items: center; justify-content: center">
-                <span style="font-size: clamp(48px, 5vw, 64px); font-weight: 500; letter-spacing: -0.02em; color: #141413">{{ s.num }}</span>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <button type="button" onClick="{{ onPrev }}" aria-label="Previous stage" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid #D1CDC7; background: transparent; color: #141413; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center" style-hover="background: #141413; color: #F3F0EE; border-color: #141413">←</button>
+        <button type="button" onClick="{{ onNext }}" aria-label="Next stage" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid #D1CDC7; background: transparent; color: #141413; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center" style-hover="background: #141413; color: #F3F0EE; border-color: #141413">→</button>
+      </div>
+    </div>
+
+    <div style="position: relative; width: 100%; overflow: hidden">
+      <div style="{{ trackStyle }}">
+        <sc-for list="{{ chemicalSlides }}" as="s" hint-placeholder-count="6">
+          <div style="{{ s.slideStyle }}">
+            <div class="mc-slide-card" onClick="{{ s.onSelect }}" style="{{ s.cardStyle }}">
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: {{ s.contentGap }}; max-width: 76%">
+                <div style="{{ s.pillStyle }}">{{ s.label }}</div>
+                <div style="{{ s.titleStyle }}">{{ s.title }}</div>
               </div>
-              <div class="mc-satellite" style="position: absolute; right: -10px; bottom: 10px; width: 56px; height: 56px; border-radius: 50%; background: #FFFFFF; color: #141413; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px">→</div>
-            </div>
-            <div style="align-self: stretch; max-width: 320px; margin: 0 auto">
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px">
-                <span style="width: 6px; height: 6px; border-radius: 50%; background: #CF4500; flex: none"></span>
-                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.48px; text-transform: uppercase; color: #696969">{{ s.tags }}</span>
-              </div>
-              <h3 style="font-weight: 500; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 10px">{{ s.title }}</h3>
-              <p style="margin: 0; font-size: 16px; font-weight: 450; line-height: 1.4; color: #262627">{{ s.body }}</p>
             </div>
           </div>
         </sc-for>
       </div>
+    </div>
+
+    <div style="max-width: 620px; margin: clamp(36px, 4.5vw, 60px) auto 0; padding: 0 24px; text-align: center">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #CF4500; flex: none"></span>
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.48px; text-transform: uppercase; color: #696969">{{ activeTags }}</span>
+      </div>
+      <p style="margin: 0; font-size: 16px; font-weight: 450; line-height: 1.5; color: #262627; min-height: 72px">{{ activeBody }}</p>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: clamp(28px, 3.5vw, 44px)">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <sc-for list="{{ chemicalDots }}" as="d" hint-placeholder-count="6">
+          <button type="button" onClick="{{ d.onSelect }}" aria-label="{{ d.label }}" style="{{ d.dotStyle }}"></button>
+        </sc-for>
+      </div>
+      <button type="button" onClick="{{ onTogglePlay }}" aria-label="{{ playLabel }}" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #D1CDC7; background: transparent; color: #141413; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center" style-hover="background: #141413; color: #F3F0EE; border-color: #141413">{{ playIcon }}</button>
     </div>
   </section>
 
@@ -325,26 +346,94 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;showTestimonials&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;submitLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Send request&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
 class Component extends DCLogic {
-  state = { sent: false };
+  state = { sent: false, pos: 6, playing: true, snapping: false };
+
+  stages = [
+    { num: "01", title: "Bulk truck", tags: "FTL | LTL | INTERMODAL | SPECIALIZED", body: "Tank trailers and specialized equipment for bulk liquids, with carriers qualified for the product you ship." },
+    { num: "02", title: "ISO tanks", tags: "HEATING | SAMPLING | CLEANING | STORAGE", body: "Tank supply and full in-transit services, including depot storage between moves." },
+    { num: "03", title: "Rail", tags: "CAR SUPPLY | LEASING | TRANSLOADING", body: "Rail car sourcing and leasing, plus transloading to truck for the final leg." },
+    { num: "04", title: "Import / export", tags: "PORT DRAYAGE", body: "Ocean freight coordination and port drayage in and out of North American terminals." },
+    { num: "05", title: "Transloading & storage", tags: "MODE TO MODE", body: "Product transferred between rail, tank and truck under supervision, with short-term storage when the schedule calls for it." },
+    { num: "06", title: "Regulatory compliance", tags: "DOCUMENTATION | PERMITS", body: "Shipping papers, placarding and permits prepared and checked before the load moves." }
+  ];
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (this.state.playing) this.setState({ pos: this.state.pos + 1 });
+    }, 5200);
+  }
+
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.snapTimer); }
+
+  // The track renders three copies of the stages, so a neighbour always bleeds off
+  // both screen edges. Once the active position leaves the middle copy, jump it back
+  // by one period after the slide finishes — the layout repeats, so the jump is invisible.
+  componentDidUpdate() {
+    const n = this.stages.length;
+    const p = this.state.pos;
+    if (this.state.snapping || (p >= n && p < 2 * n)) return;
+    clearTimeout(this.snapTimer);
+    this.snapTimer = setTimeout(() => {
+      this.setState({ pos: n + ((p % n) + n) % n, snapping: true }, () => {
+        requestAnimationFrame(() => this.setState({ snapping: false }));
+      });
+    }, 700);
+  }
+
+  go(pos) { this.setState({ pos, playing: false }); }
 
   renderVals() {
+    const n = this.stages.length;
+    const pos = this.state.pos;
+    const active = ((pos % n) + n) % n;
+    const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const move = this.state.snapping ? "none" : "620ms " + ease;
+    const current = this.stages[active];
+
     return {
       showTestimonials: this.props.showTestimonials ?? true,
       submitLabel: this.props.submitLabel ?? "Send request",
       sent: this.state.sent,
       onSubmit: (e) => { e.preventDefault(); this.setState({ sent: true }); },
+
+      onPrev: () => this.go(pos - 1),
+      onNext: () => this.go(pos + 1),
+      onTogglePlay: () => this.setState({ playing: !this.state.playing }),
+      playIcon: this.state.playing ? "❚❚" : "▶",
+      playLabel: this.state.playing ? "Pause autoplay" : "Play autoplay",
+      activeTags: current.tags,
+      activeBody: current.body,
+
+      trackStyle: "display: flex; align-items: center; gap: var(--mc-gap); width: max-content; margin-left: 50%; transform: translateX(calc(-1 * (" + pos + " * (var(--mc-ws) + var(--mc-gap)) + var(--mc-w) / 2))); transition: transform " + move,
+
+      chemicalSlides: Array.from({ length: n * 3 }, (_, i) => {
+        const s = this.stages[i % n];
+        const on = i === pos;
+        return {
+          ...s,
+          label: "Stage " + s.num,
+          onSelect: () => this.go(i),
+          contentGap: on ? "14px" : "7px",
+          slideStyle: "flex: none; width: " + (on ? "var(--mc-w)" : "var(--mc-ws)") + "; aspect-ratio: 2 / 1; transition: width " + move,
+          cardStyle: "position: relative; width: 100%; height: 100%; box-sizing: border-box; padding: 0 8%; border-radius: 20% / 50%; background: " + (on ? "#EFE7DE" : "#F0ECE6") + "; border: 1px dashed " + (on ? "#D1CDC7" : "#E2DCD4") + "; display: flex; align-items: center; justify-content: center; cursor: " + (on ? "default" : "pointer") + "; transition: background 480ms ease, border-color 320ms ease",
+          pillStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "9px 20px" : "5px 12px") + "; font-size: " + (on ? "13px" : "10px") + "; font-weight: 700; letter-spacing: 0.52px; text-transform: uppercase; white-space: nowrap",
+          titleStyle: "background: #FFFFFF; color: #141413; border-radius: 999px; padding: " + (on ? "clamp(12px, 1.5vw, 20px) clamp(24px, 3vw, 44px)" : "8px 18px") + "; font-weight: 500; font-size: " + (on ? "clamp(20px, 2.5vw, 40px)" : "clamp(11px, 1.4vw, 20px)") + "; line-height: 1.1; letter-spacing: -0.02em; box-shadow: rgba(0,0,0,0.08) 0px 24px 48px 0px"
+        };
+      }),
+
+      chemicalDots: this.stages.map((s, i) => {
+        const on = i === active;
+        return {
+          label: "Stage " + s.num,
+          onSelect: () => this.go(pos - active + i),
+          dotStyle: "width: " + (on ? "34px" : "7px") + "; height: 7px; padding: 0; border: none; border-radius: 999px; background: " + (on ? "#CF4500" : "#D1CDC7") + "; cursor: pointer; transition: width 420ms " + ease + ", background 420ms ease"
+        };
+      }),
+
       heroPoints: [
         { title: "Hazmat expertise", body: "Regulated product handled to the letter, every lane." },
         { title: "End-to-end execution", body: "Booking, documentation, tracking and delivery in one place." },
         { title: "Any mode, any market", body: "Truck, rail, intermodal and ocean across North America." }
-      ],
-      chemicalServices: [
-        { num: "01", title: "Bulk truck", tags: "FTL | LTL | INTERMODAL | SPECIALIZED", body: "Tank trailers and specialized equipment for bulk liquids, with carriers qualified for the product you ship." },
-        { num: "02", title: "ISO tanks", tags: "HEATING | SAMPLING | CLEANING | STORAGE", body: "Tank supply and full in-transit services, including depot storage between moves." },
-        { num: "03", title: "Rail", tags: "CAR SUPPLY | LEASING | TRANSLOADING", body: "Rail car sourcing and leasing, plus transloading to truck for the final leg." },
-        { num: "04", title: "Import / export", tags: "PORT DRAYAGE", body: "Ocean freight coordination and port drayage in and out of North American terminals." },
-        { num: "05", title: "Transloading & storage", tags: "MODE TO MODE", body: "Product transferred between rail, tank and truck under supervision, with short-term storage when the schedule calls for it." },
-        { num: "06", title: "Regulatory compliance", tags: "DOCUMENTATION | PERMITS", body: "Shipping papers, placarding and permits prepared and checked before the load moves." }
       ],
       advantages: [
         { title: "Chemical is our first language", body: "We are not a general broker that occasionally takes a tank load. Regulated freight is the core of the business, and the team reads an SDS before it quotes." },
