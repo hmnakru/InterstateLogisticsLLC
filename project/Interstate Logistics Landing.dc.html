@@ -137,7 +137,7 @@
           <span style="width: 7px; height: 7px; border-radius: 50%; background: #CF4500"></span>
           <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.56px; text-transform: uppercase">Chemical logistics</span>
         </div>
-        <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 14px">What we move, and how</h2>
+        <h2 style="font-weight: 500; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 14px">What we handle, end to end</h2>
         <p style="max-width: 420px; margin: 0; color: #696969; font-size: 16px; font-weight: 450; line-height: 1.4">Specialized when it is complex. Connected for everything else.</p>
       </div>
       <div style="display: flex; align-items: center; gap: 12px">
@@ -148,7 +148,7 @@
 
     <div style="position: relative; width: 100%; overflow: hidden">
       <div style="{{ trackStyle }}">
-        <sc-for list="{{ chemicalSlides }}" as="s" hint-placeholder-count="6">
+        <sc-for list="{{ chemicalSlides }}" as="s" hint-placeholder-count="5">
           <div style="{{ s.slideStyle }}">
             <div class="mc-slide-card" onClick="{{ s.onSelect }}" style="{{ s.cardStyle }}">
               <div style="display: flex; flex-direction: column; align-items: flex-start; gap: {{ s.contentGap }}; max-width: 76%">
@@ -171,7 +171,7 @@
 
     <div style="display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: clamp(28px, 3.5vw, 44px)">
       <div style="display: flex; align-items: center; gap: 10px">
-        <sc-for list="{{ chemicalDots }}" as="d" hint-placeholder-count="6">
+        <sc-for list="{{ chemicalDots }}" as="d" hint-placeholder-count="5">
           <button type="button" onClick="{{ d.onSelect }}" aria-label="{{ d.label }}" style="{{ d.dotStyle }}"></button>
         </sc-for>
       </div>
@@ -346,15 +346,14 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;showTestimonials&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;submitLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Send request&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
 class Component extends DCLogic {
-  state = { sent: false, pos: 6, playing: true, snapping: false };
+  state = { sent: false, pos: 5, playing: true, snapping: false };
 
   stages = [
-    { num: "01", title: "Bulk truck", tags: "FTL | LTL | INTERMODAL | SPECIALIZED", body: "Tank trailers and specialized equipment for bulk liquids, with carriers qualified for the product you ship." },
-    { num: "02", title: "ISO tanks", tags: "HEATING | SAMPLING | CLEANING | STORAGE", body: "Tank supply and full in-transit services, including depot storage between moves." },
-    { num: "03", title: "Rail", tags: "CAR SUPPLY | LEASING | TRANSLOADING", body: "Rail car sourcing and leasing, plus transloading to truck for the final leg." },
-    { num: "04", title: "Import / export", tags: "PORT DRAYAGE", body: "Ocean freight coordination and port drayage in and out of North American terminals." },
-    { num: "05", title: "Transloading & storage", tags: "MODE TO MODE", body: "Product transferred between rail, tank and truck under supervision, with short-term storage when the schedule calls for it." },
-    { num: "06", title: "Regulatory compliance", tags: "DOCUMENTATION | PERMITS", body: "Shipping papers, placarding and permits prepared and checked before the load moves." }
+    { num: "01", title: "ISO tank solutions", tags: "SUPPLY | LEASING | REPOSITIONING", body: "ISO tank containers sourced, leased and positioned for your lane, with the shell, valves and approvals the product requires." },
+    { num: "02", title: "Railcar movements", tags: "CAR SUPPLY | LEASING | SWITCHING", body: "Rail car sourcing and leasing, with movements between plants, terminals and depots tracked from release to placement." },
+    { num: "03", title: "Heating", tags: "STEAM | ELECTRIC | HOT BOX", body: "Product brought back to pumping temperature by steam, electric blanket or hot box, held to the profile the cargo calls for." },
+    { num: "04", title: "Washing", tags: "CLEANING | FOOD GRADE | KOSHER", body: "Tank and container cleaning at approved facilities, with wash certificates on file so the next load starts from a documented clean." },
+    { num: "05", title: "Transloading", tags: "MODE TO MODE | STORAGE", body: "Product transferred between rail, tank and truck under supervision, with short-term storage when the schedule calls for it." }
   ];
 
   componentDidMount() {
